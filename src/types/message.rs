@@ -42,9 +42,9 @@ pub struct Message {
   /// True, if the message thread info is available
   can_get_message_thread: bool,
   /// True, if media timestamp links can be generated for media timestamp entities in the message text, caption or web page description
-  can_get_media_timestamp_links: bool,
+  can_get_media_timestamp_links: Option<bool>,
   /// True, if media timestamp entities refers to a media in this message as opposed to a media in the replied message
-  has_timestamped_media: bool,
+  has_timestamped_media: Option<bool>,
   /// True, if the message is a channel post. All messages to channels are channel posts, all other messages are not channel posts
   is_channel_post: bool,
   /// True, if the message contains an unread mention for the current user
@@ -125,9 +125,9 @@ impl Message {
 
   pub fn can_get_message_thread(&self) -> bool { self.can_get_message_thread }
 
-  pub fn can_get_media_timestamp_links(&self) -> bool { self.can_get_media_timestamp_links }
+  pub fn can_get_media_timestamp_links(&self) -> Option<bool> { self.can_get_media_timestamp_links }
 
-  pub fn has_timestamped_media(&self) -> bool { self.has_timestamped_media }
+  pub fn has_timestamped_media(&self) -> Option<bool> { self.has_timestamped_media }
 
   pub fn is_channel_post(&self) -> bool { self.is_channel_post }
 
@@ -252,13 +252,13 @@ impl RTDMessageBuilder {
   }
 
    
-  pub fn can_get_media_timestamp_links(&mut self, can_get_media_timestamp_links: bool) -> &mut Self {
+  pub fn can_get_media_timestamp_links(&mut self, can_get_media_timestamp_links: Option<bool>) -> &mut Self {
     self.inner.can_get_media_timestamp_links = can_get_media_timestamp_links;
     self
   }
 
    
-  pub fn has_timestamped_media(&mut self, has_timestamped_media: bool) -> &mut Self {
+  pub fn has_timestamped_media(&mut self, has_timestamped_media: Option<bool>) -> &mut Self {
     self.inner.has_timestamped_media = has_timestamped_media;
     self
   }

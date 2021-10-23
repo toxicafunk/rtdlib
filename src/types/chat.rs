@@ -1,4 +1,3 @@
-
 use crate::types::*;
 use crate::errors::*;
 use uuid::Uuid;
@@ -54,11 +53,11 @@ pub struct Chat {
   /// Notification settings for this chat
   notification_settings: ChatNotificationSettings,
   /// Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats
-  message_ttl_setting: i64,
+  message_ttl_setting: Option<i64>,
   /// Describes actions which should be possible to do through a chat action bar; may be null
   action_bar: Option<ChatActionBar>,
   /// Contains information about voice chat of the chat
-  voice_chat: VoiceChat,
+  voice_chat: Option<VoiceChat>,
   /// Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
   reply_markup_message_id: i64,
   /// A draft of a message in the chat; may be null
@@ -123,11 +122,11 @@ impl Chat {
 
   pub fn notification_settings(&self) -> &ChatNotificationSettings { &self.notification_settings }
 
-  pub fn message_ttl_setting(&self) -> i64 { self.message_ttl_setting }
+  pub fn message_ttl_setting(&self) -> Option<i64> { self.message_ttl_setting }
 
   pub fn action_bar(&self) -> &Option<ChatActionBar> { &self.action_bar }
 
-  pub fn voice_chat(&self) -> &VoiceChat { &self.voice_chat }
+  pub fn voice_chat(&self) -> &Option<VoiceChat> { &self.voice_chat }
 
   pub fn reply_markup_message_id(&self) -> i64 { self.reply_markup_message_id }
 
@@ -260,7 +259,7 @@ impl RTDChatBuilder {
   }
 
    
-  pub fn message_ttl_setting(&mut self, message_ttl_setting: i64) -> &mut Self {
+  pub fn message_ttl_setting(&mut self, message_ttl_setting: Option<i64>) -> &mut Self {
     self.inner.message_ttl_setting = message_ttl_setting;
     self
   }
@@ -273,7 +272,7 @@ impl RTDChatBuilder {
 
    
   pub fn voice_chat<T: AsRef<VoiceChat>>(&mut self, voice_chat: T) -> &mut Self {
-    self.inner.voice_chat = voice_chat.as_ref().clone();
+    self.inner.voice_chat = Some(voice_chat.as_ref().clone());
     self
   }
 

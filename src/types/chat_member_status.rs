@@ -147,7 +147,7 @@ pub struct ChatMemberStatusAdministrator {
   /// True, if the current user can edit the administrator privileges for the called user
   can_be_edited: bool,
   /// True, if the administrator can get chat event log, get chat statistics, get message statistics in channels, get channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other privilege; applicable to supergroups and channels only
-  can_manage_chat: bool,
+  can_manage_chat: Option<bool>,
   /// True, if the administrator can change the chat title, photo, and other settings
   can_change_info: bool,
   /// True, if the administrator can create channel posts; applicable to channels only
@@ -165,7 +165,7 @@ pub struct ChatMemberStatusAdministrator {
   /// True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by them
   can_promote_members: bool,
   /// True, if the administrator can manage voice chats
-  can_manage_voice_chats: bool,
+  can_manage_voice_chats: Option<bool>,
   /// True, if the administrator isn't shown in the chat member list and sends messages anonymously; applicable to supergroups only
   is_anonymous: bool,
   
@@ -195,7 +195,7 @@ impl ChatMemberStatusAdministrator {
 
   pub fn can_be_edited(&self) -> bool { self.can_be_edited }
 
-  pub fn can_manage_chat(&self) -> bool { self.can_manage_chat }
+  pub fn can_manage_chat(&self) -> Option<bool> { self.can_manage_chat }
 
   pub fn can_change_info(&self) -> bool { self.can_change_info }
 
@@ -213,7 +213,7 @@ impl ChatMemberStatusAdministrator {
 
   pub fn can_promote_members(&self) -> bool { self.can_promote_members }
 
-  pub fn can_manage_voice_chats(&self) -> bool { self.can_manage_voice_chats }
+  pub fn can_manage_voice_chats(&self) -> Option<bool> { self.can_manage_voice_chats }
 
   pub fn is_anonymous(&self) -> bool { self.is_anonymous }
 
@@ -240,7 +240,7 @@ impl RTDChatMemberStatusAdministratorBuilder {
   }
 
    
-  pub fn can_manage_chat(&mut self, can_manage_chat: bool) -> &mut Self {
+  pub fn can_manage_chat(&mut self, can_manage_chat: Option<bool>) -> &mut Self {
     self.inner.can_manage_chat = can_manage_chat;
     self
   }
@@ -294,7 +294,7 @@ impl RTDChatMemberStatusAdministratorBuilder {
   }
 
    
-  pub fn can_manage_voice_chats(&mut self, can_manage_voice_chats: bool) -> &mut Self {
+  pub fn can_manage_voice_chats(&mut self, can_manage_voice_chats: Option<bool>) -> &mut Self {
     self.inner.can_manage_voice_chats = can_manage_voice_chats;
     self
   }

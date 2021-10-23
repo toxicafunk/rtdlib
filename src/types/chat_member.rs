@@ -16,7 +16,7 @@ pub struct ChatMember {
   #[serde(rename(serialize = "@extra", deserialize = "@extra"))]
   extra: Option<String>,
   /// Identifier of the chat member. Currently, other chats can be only Left or Banned. Only supergroups and channels can have other chats as Left or Banned members and these chats must be supergroups or channels
-  member_id: MessageSender,
+  member_id: Option<MessageSender>,
   /// Identifier of a user that invited/promoted/banned this member in the chat; 0 if unknown
   inviter_user_id: i64,
   /// Point in time (Unix timestamp) when the user joined the chat
@@ -43,7 +43,7 @@ impl ChatMember {
     RTDChatMemberBuilder { inner }
   }
 
-  pub fn member_id(&self) -> &MessageSender { &self.member_id }
+  pub fn member_id(&self) -> &Option<MessageSender> { &self.member_id }
 
   pub fn inviter_user_id(&self) -> i64 { self.inviter_user_id }
 
@@ -63,7 +63,7 @@ impl RTDChatMemberBuilder {
 
    
   pub fn member_id<T: AsRef<MessageSender>>(&mut self, member_id: T) -> &mut Self {
-    self.inner.member_id = member_id.as_ref().clone();
+    self.inner.member_id = Some(member_id.as_ref().clone());
     self
   }
 
