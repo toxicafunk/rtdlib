@@ -53,16 +53,20 @@ pub struct Chat {
   /// Notification settings for this chat
   notification_settings: ChatNotificationSettings,
   /// Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats
-  message_ttl_setting: Option<i64>,
-  /// Describes actions which should be possible to do through a chat action bar; may be null
+  message_ttl_setting: i64,
+  /// If non-empty, name of a theme, set for the chat
+  theme_name: String,
+  /// Information about actions which must be possible to do through the chat action bar; may be null
   action_bar: Option<ChatActionBar>,
-  /// Contains information about voice chat of the chat
-  voice_chat: Option<VoiceChat>,
+  /// Information about video chat of the chat
+  video_chat: VideoChat,
+  /// Information about pending join requests; may be null
+  pending_join_requests: Option<ChatJoinRequestsInfo>,
   /// Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
   reply_markup_message_id: i64,
   /// A draft of a message in the chat; may be null
   draft_message: Option<DraftMessage>,
-  /// Contains application-specific data associated with the chat. (For example, the chat scroll position or local chat notification settings can be stored here.) Persistent if the message database is used
+  /// Application-specific data associated with the chat. (For example, the chat scroll position or local chat notification settings can be stored here.) Persistent if the message database is used
   client_data: String,
   
 }
@@ -122,11 +126,15 @@ impl Chat {
 
   pub fn notification_settings(&self) -> &ChatNotificationSettings { &self.notification_settings }
 
-  pub fn message_ttl_setting(&self) -> Option<i64> { self.message_ttl_setting }
+  pub fn message_ttl_setting(&self) -> i64 { self.message_ttl_setting }
+
+  pub fn theme_name(&self) -> &String { &self.theme_name }
 
   pub fn action_bar(&self) -> &Option<ChatActionBar> { &self.action_bar }
 
-  pub fn voice_chat(&self) -> &Option<VoiceChat> { &self.voice_chat }
+  pub fn video_chat(&self) -> &VideoChat { &self.video_chat }
+
+  pub fn pending_join_requests(&self) -> &Option<ChatJoinRequestsInfo> { &self.pending_join_requests }
 
   pub fn reply_markup_message_id(&self) -> i64 { self.reply_markup_message_id }
 
@@ -259,8 +267,14 @@ impl RTDChatBuilder {
   }
 
    
-  pub fn message_ttl_setting(&mut self, message_ttl_setting: Option<i64>) -> &mut Self {
+  pub fn message_ttl_setting(&mut self, message_ttl_setting: i64) -> &mut Self {
     self.inner.message_ttl_setting = message_ttl_setting;
+    self
+  }
+
+   
+  pub fn theme_name<T: AsRef<str>>(&mut self, theme_name: T) -> &mut Self {
+    self.inner.theme_name = theme_name.as_ref().to_string();
     self
   }
 
@@ -270,9 +284,15 @@ impl RTDChatBuilder {
     self
   }
 
+
+  pub fn video_chat<T: AsRef<VideoChat>>(&mut self, video_chat: T) -> &mut Self {
+    self.inner.video_chat = video_chat.as_ref().clone();
+    self
+  }
+
    
-  pub fn voice_chat<T: AsRef<VoiceChat>>(&mut self, voice_chat: T) -> &mut Self {
-    self.inner.voice_chat = Some(voice_chat.as_ref().clone());
+  pub fn pending_join_requests<T: AsRef<ChatJoinRequestsInfo>>(&mut self, pending_join_requests: T) -> &mut Self {
+    self.inner.pending_join_requests = Some(pending_join_requests.as_ref().clone());
     self
   }
 

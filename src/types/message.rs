@@ -21,9 +21,9 @@ pub struct Message {
   sender: MessageSender,
   /// Chat identifier
   chat_id: i64,
-  /// Information about the sending state of the message; may be null
+  /// The sending state of the message; may be null
   sending_state: Option<MessageSendingState>,
-  /// Information about the scheduling state of the message; may be null
+  /// The scheduling state of the message; may be null
   scheduling_state: Option<MessageSchedulingState>,
   /// True, if the message is outgoing
   is_outgoing: bool,
@@ -41,8 +41,10 @@ pub struct Message {
   can_get_statistics: bool,
   /// True, if the message thread info is available
   can_get_message_thread: bool,
+  /// True, if chat members already viewed the message can be received through getMessageViewers
+  can_get_viewers: bool,
   /// True, if media timestamp links can be generated for media timestamp entities in the message text, caption or web page description
-  can_get_media_timestamp_links: Option<bool>,
+  can_get_media_timestamp_links: bool,
   /// True, if media timestamp entities refers to a media in this message as opposed to a media in the replied message
   has_timestamped_media: Option<bool>,
   /// True, if the message is a channel post. All messages to channels are channel posts, all other messages are not channel posts
@@ -125,7 +127,9 @@ impl Message {
 
   pub fn can_get_message_thread(&self) -> bool { self.can_get_message_thread }
 
-  pub fn can_get_media_timestamp_links(&self) -> Option<bool> { self.can_get_media_timestamp_links }
+  pub fn can_get_viewers(&self) -> bool { self.can_get_viewers }
+
+  pub fn can_get_media_timestamp_links(&self) -> bool { self.can_get_media_timestamp_links }
 
   pub fn has_timestamped_media(&self) -> Option<bool> { self.has_timestamped_media }
 
@@ -251,8 +255,13 @@ impl RTDMessageBuilder {
     self
   }
 
+
+  pub fn can_get_viewers(&mut self, can_get_viewers: bool) -> &mut Self {
+    self.inner.can_get_viewers = can_get_viewers;
+    self
+  }
    
-  pub fn can_get_media_timestamp_links(&mut self, can_get_media_timestamp_links: Option<bool>) -> &mut Self {
+  pub fn can_get_media_timestamp_links(&mut self, can_get_media_timestamp_links: bool) -> &mut Self {
     self.inner.can_get_media_timestamp_links = can_get_media_timestamp_links;
     self
   }
